@@ -10,6 +10,7 @@ SUPPORTED_DIALECTS = (
     'mysql'
 )
 
+
 class NotSupportedDatabase(Exception):
     pass
 
@@ -165,4 +166,3 @@ def list_of_databases(raw_conn):
         ]
     else:
         raise NotSupportedDatabase()
-

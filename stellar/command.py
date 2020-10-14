@@ -4,7 +4,6 @@ from time import sleep
 
 import humanize
 import click
-import logging
 from sqlalchemy import create_engine
 from sqlalchemy.exc import OperationalError
 
@@ -17,12 +16,14 @@ def upgrade_from_old_version(app):
     if app.config['migrate_from_0_3_2']:
         if app.is_old_database():
             click.echo('Upgrading from old Stellar version...')
+
             def after_rename(old_name, new_name):
                 click.echo('* Renamed %s to %s' % (old_name, new_name))
             app.update_database_names_to_new_version(after_rename=after_rename)
 
         app.config['migrate_from_0_3_2'] = False
         save_config(app.config)
+
 
 def get_app():
     app = Stellar()
@@ -195,11 +196,7 @@ def init():
         if url.count('/') == 2 and not url.endswith('/'):
             url = url + '/'
 
-        if (
-            url.count('/') == 3 and
-            url.endswith('/') and
-            url.startswith('postgresql://')
-        ):
+        if url.count('/') == 3 and url.endswith('/') and url.startswith('postgresql://'):
             connection_url = url + 'template1'
         else:
             connection_url = url
@@ -315,6 +312,7 @@ def main():
                 )
                 sys.exit(1)
         raise
+
 
 if __name__ == '__main__':
     main()
